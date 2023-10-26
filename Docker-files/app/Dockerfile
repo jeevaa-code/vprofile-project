@@ -1,0 +1,19 @@
+FROM openjdk:11 as BUILDIMAGE
+RUN apt update && apt install maven -y
+RUN apt install git -y
+RUN git clone https://github.com/devopshydclub/vprofile-project.git
+RUN cd vprofile-project && git checkout docker && mvn install
+
+
+
+FROM tomcat
+RUN rm -rf /usr/local/tomcat/webapps/*
+COPY from=BUILDIMAGE vprofile-project/target/vprofile-v2.war /usr/local/tomcat/webapps/ROOT.war
+EXPOSE 8080
+CMD ["catalina.sh", "run"]
+
+
+
+
+
+
