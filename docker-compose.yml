@@ -1,0 +1,64 @@
+version: "3.8"  
+services: 
+    app:
+      build:
+        context:  ./Docker-files/app
+
+      image: jeevaa21/app01
+
+      container_name: vproapp01
+
+      volumes:
+        - vproappdata:/usr/local/tomcat/webapps
+      ports:
+        - "8080:8080"
+
+    web:
+      build:
+        context:  ./Docker-files/web
+
+      image: jeevaa21/web01
+
+      ports:
+        - "80:80"
+      container_name: vproweb
+
+
+    db:
+      build:
+        context: ./Docker-files/db
+
+      image: jeevaa21/db01
+
+      container_name: vprodb
+
+      volumes:
+        - vprodbdata:/var/lib/mysql
+
+      ports: 
+        - "3306:3306"
+
+      environment: 
+        - MYSQL_ROOT_PASSWORD=vprodbpass
+    rabbitmq:
+      image: rabbitmq
+
+      ports:
+        - "15672:15672"
+
+      environment:
+        - RABBITMQ_DEFAULT_USER=guest
+
+        - RABBITMQ_DEFAULT_PASS=guest
+      container_name: vpromq01
+
+    memecache:
+      image: memcached
+      ports: 
+        - "11211:11211"
+
+      container_name: vprocache01
+volumes:
+  vprodbdata: {}
+  vproappdata: {}
+
